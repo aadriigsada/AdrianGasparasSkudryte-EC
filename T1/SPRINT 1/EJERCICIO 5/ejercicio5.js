@@ -2,22 +2,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const xpathConsole = document.getElementById('xpathConsole');
     const iframe = document.getElementById('myIframe');
 
-    function obtenerXPath(elemento) {
+    // Función pura de XPath estructural (sin usar IDs)
+    function obtenerXPathEstructural(elemento) {
         if (!elemento || elemento.nodeType !== Node.ELEMENT_NODE) {
             return '';
         }
 
-        if (elemento.id) {
-            return `//*[@id="${elemento.id}"]`;
-        }
-
-        if (elemento === elemento.ownerDocument.documentElement) {
-            return `/${elemento.tagName.toLowerCase()}`;
+        // Caso base: llegamos al inicio (etiqueta HTML)
+        if (elemento.tagName.toLowerCase() === 'html') {
+            return '/html';
         }
 
         let posicion = 1;
         let hermano = elemento.previousElementSibling;
 
+        // Calcular posición del elemento entre sus hermanos iguales
         while (hermano) {
             if (hermano.tagName === elemento.tagName) {
                 posicion++;
@@ -25,11 +24,20 @@ document.addEventListener('DOMContentLoaded', function () {
             hermano = hermano.previousElementSibling;
         }
 
-        return `${obtenerXPath(elemento.parentElement)}/${elemento.tagName.toLowerCase()}[${posicion}]`;
+        const rutaPadre = obtenerXPathEstructural(elemento.parentElement);
+        return `${rutaPadre}/${elemento.tagName.toLowerCase()}[${posicion}]`;
     }
 
     function mostrarXPath(evento) {
-        const xpath = obtenerXPath(evento.target);
+        const elementoClickeado = evento.target;
+
+        // RESTRICCIÓN: Solo actuamos si el clic fue sobre un <button>
+        if (elementoClickeado.tagName.toLowerCase() !== 'button') {
+            return; // Si no es un botón, ignoramos el clic
+        }
+
+        // Generamos el XPath usando la versión estructural sin IDs
+        const xpath = obtenerXPathEstructural(elementoClickeado);
 
         if (xpathConsole) {
             xpathConsole.textContent = `El xpath es -> ${xpath}`;
@@ -39,16 +47,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function activarClicksEnIframe() {
-        if (!iframe) {
-            return false;
-        }
+        if (!iframe) return false;
 
         try {
             const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-            if (!iframeDocument || !iframeDocument.body) {
-                return false;
-            }
+            if (!iframeDocument || !iframeDocument.body) return false;
 
             iframeDocument.removeEventListener('click', mostrarXPath);
             iframeDocument.addEventListener('click', mostrarXPath);
@@ -59,15 +63,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function convertirDataIframeASrcdoc() {
-        if (!iframe || iframe.dataset.srcdocPreparado === 'true') {
-            return;
-        }
+        if (!iframe || iframe.dataset.srcdocPreparado === 'true') return;
 
         const src = iframe.getAttribute('src') || '';
-
-        if (!src.startsWith('data:text/html')) {
-            return;
-        }
+        if (!src.startsWith('data:text/html')) return;
 
         iframe.dataset.srcdocPreparado = 'true';
 
@@ -76,8 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
         iframe.setAttribute('srcdoc', contenidoHtml);
     }
 
+    // Event listener en el documento principal
     document.addEventListener('click', mostrarXPath);
 
+    // Preparación del Iframe
     if (iframe) {
         iframe.addEventListener('load', activarClicksEnIframe);
 
