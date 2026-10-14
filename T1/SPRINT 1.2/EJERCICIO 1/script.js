@@ -4,12 +4,13 @@ const startBtn = document.getElementById('startBtn');
 const timeDisplay = document.getElementById('timeDisplay');
 const messageDisplay = document.getElementById('messageDisplay');
 const scareOverlay = document.getElementById('scareOverlay');
+const floatingAlert = document.getElementById('floatingAlert');
 
 // Variables para el control del temporizador y audio
 let timerInterval = null;
 let audioGrito = null;
 
-// Cargar/Configurar audio del grito (puedes cambiar la URL si tienes un archivo .mp3 local)
+// Cargar/Configurar audio del grito
 function initAudio() {
   audioGrito = new Audio('https://assets.mixkit.co/active_storage/sfx/2173/2173-preview.mp3');
 }
@@ -24,13 +25,14 @@ function startTimer() {
     return;
   }
 
-  // Pre-cargar audio al hacer clic (necesario por políticas de reproducción en navegadores)
+  // Pre-cargar audio al hacer clic
   if (!audioGrito) {
     initAudio();
   }
 
-  // Limpiar cualquier intervalo anterior si existiera
+  // Limpiar cualquier intervalo e interfaz previa
   clearInterval(timerInterval);
+  floatingAlert.style.display = 'none';
 
   let remainingTime = inputSeconds;
 
@@ -52,8 +54,9 @@ function startTimer() {
       // Detener el intervalo
       clearInterval(timerInterval);
 
-      // Mostrar mensaje final
+      // Mostrar mensaje en texto y en la alerta flotante
       messageDisplay.innerText = "¡Tiempo finalizado!";
+      floatingAlert.style.display = 'block';
 
       // Habilitar controles
       startBtn.disabled = false;
@@ -76,15 +79,16 @@ function triggerScare() {
   }
 
   // Mostrar la imagen a pantalla completa
-  scareOverlay.style.display = 'flex';
+  scareOverlay.style.display = 'block';
 }
 
 // 5. Asignación de eventos (Click)
 startBtn.addEventListener('click', startTimer);
 
-// Evento para cerrar la imagen de susto haciendo clic sobre ella
+// Evento para cerrar la imagen de susto y la alerta al hacer clic
 scareOverlay.addEventListener('click', () => {
   scareOverlay.style.display = 'none';
+  floatingAlert.style.display = 'none';
   if (audioGrito) {
     audioGrito.pause();
   }
