@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ejercicio 3: Encuesta con Gráfico</title>
+  <style>
+    /* Estilos mínimos para construir las barras del gráfico */
+    .bar-container {
+      margin-bottom: 12px;
+    }
+    .bar-label {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .bar-wrapper {
+      background-color: #eee;
+      width: 100%;
+      max-width: 400px;
+      height: 24px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background-color: #3b82f6;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Encuesta: ¿Cuál es tu color favorito?</h1>
+
+  <form id="pollForm">
+    <p>Selecciona una opción:</p>
+    <div>
+      <input type="radio" id="rojo" name="color" value="Rojo">
+      <label for="rojo">Rojo</label>
+    </div>
+    <div>
+      <input type="radio" id="azul" name="color" value="Azul">
+      <label for="azul">Azul</label>
+    </div>
+    <div>
+      <input type="radio" id="verde" name="color" value="Verde">
+      <label for="verde">Verde</label>
+    </div>
+    <div>
+      <input type="radio" id="amarillo" name="color" value="Amarillo">
+      <label for="amarillo">Amarillo</label>
+    </div>
+    <br>
+    <button type="button" id="btnEnviar">Enviar Voto</button>
+  </form>
+
+  <p id="mensajeError" style="color: red;"></p>
+
+  <h2>Resultados</h2>
+  <div id="chartContainer">
+    <!-- El gráfico de barras se generará/actualizará dinámicamente desde JS -->
+  </div>
+
+  <p><strong>Total de votos:</strong> <span id="totalVotos">0</span></p>
+
+  <script src="script.js"></script>
+</body>
+</html>

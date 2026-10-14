@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Temporizador</title>
+  <style>
+    #scareOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+    }
+    #scareOverlay img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Temporizador</h1>
+
+  <label for="secondsInput">Segundos:</label>
+  <input type="number" id="secondsInput" min="1">
+  <button id="startBtn">Iniciar</button>
+
+  <p>Tiempo restante: <span id="timeDisplay">0</span>s</p>
+  <p id="messageDisplay"></p>
+
+  <!-- Imagen de susto -->
+  <div id="scareOverlay">
+    <img src="https://imgs.search.brave.com/o8mDzToxIKIy8vaGrOAM5wScrJ4BiGLQJoMVNntYJeQ/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1Qk1tRTBOMlE0/WVRJdE0yWXhNQzAw/TW1FeUxUbGhNVFl0/TW1VME5HRm1PREU1/WkRnNVhrRXlYa0Zx/Y0djQC5qcGc" alt="Susto">
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

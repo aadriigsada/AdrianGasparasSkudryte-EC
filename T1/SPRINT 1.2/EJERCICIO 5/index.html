@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ejercicio 5: Juego de Memoria de Cartas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .info-panel {
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+
+    /* Cuadrícula de cartas */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(4, 110px);
+      gap: 15px;
+      justify-content: center;
+      margin: 0 auto 20px auto;
+    }
+
+    /* Carta individual */
+    .card {
+      width: 110px;
+      height: 160px;
+      position: relative;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Estado volteado */
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Caras de la carta */
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    /* Reverso de la carta (Boca abajo) */
+    .card-back {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    /* Anverso de la carta (Boca arriba) */
+    .card-front {
+      background-color: #ffffff;
+      transform: rotateY(180deg);
+      padding: 10px;
+    }
+
+    .card-front svg {
+      width: 80%;
+      height: 80%;
+    }
+
+    /* Pareja encontrada */
+    .card.matched .card-inner {
+      box-shadow: 0 0 10px 3px #4caf50;
+      cursor: default;
+    }
+
+    /* Botón reiniciar */
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      background-color: #2a5298;
+      color: white;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #1e3c72;
+    }
+
+    #message {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #2e7d32;
+      min-height: 30px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Juego de Memoria - Baraja Española</h1>
+
+  <div class="info-panel">
+    <span>Parejas encontradas: <strong id="pairsCount">0</strong> / 6</span> |
+    <span>Intentos: <strong id="attemptsCount">0</strong></span>
+  </div>
+
+  <!-- Contenedor del tablero -->
+  <div id="gameBoard" class="grid-container"></div>
+
+  <div id="message"></div>
+  <button id="restartBtn">Reiniciar Juego</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
