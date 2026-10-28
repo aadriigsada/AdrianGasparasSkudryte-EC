@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 5 - Gestión Avanzada de Parties</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #f4f6f9; color: #333; }
+        h1, h2 { color: #2c3e50; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        
+        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .flex-row { display: flex; gap: 15px; align-items: flex-end; }
+        
+        button { border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+        .btn-primary { background-color: #2980b9; color: white; }
+        .btn-primary:hover { background-color: #2471a3; }
+        .btn-add { background-color: #27ae60; color: white; }
+        .btn-add:hover { background-color: #219150; }
+        .btn-danger { background-color: #e74c3c; color: white; padding: 6px 12px; }
+        .btn-danger:hover { background-color: #c0392b; }
+        .btn-secondary { background-color: #95a5a6; color: white; }
+
+        input, select { padding: 9px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95em; }
+        label { font-size: 0.85em; font-weight: bold; color: #555; display: block; margin-bottom: 5px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+        th { background-color: #34495e; color: white; }
+        
+        .badge-role { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; color: white; background-color: #8e44ad; font-weight: bold; }
+
+        /* Modales */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 10px; max-width: 500px; width: 100%; position: relative; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+        .close-btn { font-size: 24px; cursor: pointer; color: #aaa; }
+        
+        .error-banner { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px; margin-bottom: 15px; display: none; }
+        
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Gestión Avanzada de Parties</h1>
+
+    <!-- 1. Buscador / Visualización de Party Creada -->
+    <div class="panel">
+        <h2>Cargar Party Existente</h2>
+        <p style="font-size:0.9em; color:#666;">Introduce el ID y tamaño de la party creada en el Ejercicio 4 para cargar sus detalles.</p>
+        <div class="flex-row">
+            <div>
+                <label for="search_party_size">Party Size *</label>
+                <select id="search_party_size">
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="8">8</option>
+                </select>
+            </div>
+            <div>
+                <label for="search_party_id">Party ID *</label>
+                <input type="number" id="search_party_id" placeholder="Ej: 1" min="1">
+            </div>
+            <button class="btn-primary" onclick="cargarParty()">Cargar Party</button>
+        </div>
+        <div id="busqueda-error" style="color: red; margin-top: 10px; font-weight: bold;"></div>
+    </div>
+
+    <!-- 2. Detalles de la Party y Gestión de Miembros -->
+    <div class="panel" id="party-details-panel" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Detalles de la Party #<span id="lbl_party_id"></span> (Tamaño: <span id="lbl_party_size"></span>)</h2>
+            <button class="btn-add" onclick="abrirModalAdd()">+ Add Member</button>
+        </div>
+        
+        <ul style="list-style: none; padding: 0; display: flex; gap: 20px; background: #f8f9fa; padding: 15px; border-radius: 6px;">
+            <li><strong>Creador ID:</strong> <span id="lbl_creator"></span></li>
+            <li><strong>Inicio Planeado:</strong> <span id="lbl_date"></span></li>
+            <li><strong>Lvl Cap:</strong> <span id="lbl_lvl"></span></li>
+            <li><strong>iLvl Cap:</strong> <span id="lbl_ilvl"></span></li>
+            <li><strong>Miembros:</strong> <span id="lbl_count"></span> / <span id="lbl_max"></span></li>
+        </ul>
+
+        <h3>Miembros Actuales</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Role</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-party-members">
+                <!-- Miembros renderizados dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Añadir Miembro -->
+<div id="modalAddMember" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Añadir Nuevo Miembro</h3>
+            <span class="close-btn" onclick="cerrarModalAdd()">&times;</span>
+        </div>
+        <div id="add-error-banner" class="error-banner"></div>
+        <form id="form-add" onsubmit="validarYAñadir(event)">
+            <label for="new_user_id">User ID *</label>
+            <input type="text" id="new_user_id" style="width: 100%; margin-bottom: 15px;" required>
+            
+            <label for="new_role">Party Role *</label>
+            <select id="new_role" style="width: 100%; margin-bottom: 20px;" required>
+                <option value="TANK">TANK</option>
+                <option value="HEALER">HEALER</option>
+                <option value="DAMAGE">DAMAGE</option>
+                <option value="SUPPORT">SUPPORT</option>
+            </select>
+            
+            <div style="text-align: right;">
+                <button type="button" class="btn-secondary" onclick="cerrarModalAdd()">Cancelar</button>
+                <button type="submit" class="btn-add">Validar Miembro</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
