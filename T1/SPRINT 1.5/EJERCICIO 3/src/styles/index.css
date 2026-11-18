@@ -1,0 +1,79 @@
+:root {
+  /* ===== Colores corporativos OmniWork ===== */
+  --slate: #f8fafc;
+  --blue: #2563eb;
+  --orange: #f97316;
+
+  --text: #475569;
+  --text-h: #0f172a;
+  --bg: var(--slate);
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --accent: var(--blue);
+  --accent-bg: rgba(37, 99, 235, 0.1);
+  --highlight: var(--orange);
+  --danger: #b91c1c;
+  --danger-bg: #fef2f2;
+  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 16px/1.5 var(--sans);
+  color-scheme: light;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  margin: 0 0 16px;
+  font-size: 28px;
+  color: var(--text-h);
+}
+
+a {
+  color: var(--accent);
+}
+
+code {
+  font-family: var(--mono);
+  padding: 2px 6px;
+  background: var(--accent-bg);
+  border-radius: 4px;
+}
+
+button {
+  font: inherit;
+  padding: 8px 16px;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--highlight);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Foco siempre visible al navegar con teclado */
+:focus-visible {
+  outline: 3px solid var(--highlight);
+  outline-offset: 2px;
+}

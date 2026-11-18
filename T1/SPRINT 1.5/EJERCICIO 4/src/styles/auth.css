@@ -1,0 +1,45 @@
+/* Estilos funcionales mínimos de la sesión local */
+
+.session-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.session-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.session-on {
+  background: #16a34a;
+}
+
+.session-off {
+  background: #94a3b8;
+}
+
+.session-logout {
+  padding: 4px 12px;
+  font-size: 14px;
+}
+
+.auth-view {
+  max-width: 420px;
+}
+
+.auth-notice {
+  padding: 12px 16px;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border-left: 4px solid var(--danger);
+  border-radius: 8px;
+}
+
+.auth-hint {
+  font-size: 14px;
+}
